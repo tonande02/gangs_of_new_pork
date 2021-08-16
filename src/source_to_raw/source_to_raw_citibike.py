@@ -3,6 +3,7 @@ from urllib.request import urlopen
 import urllib.parse
 from zipfile import ZipFile
 import csv
+import json
 
 def download_zip_file():
     zipurl = "https://s3.amazonaws.com/tripdata/JC-202106-citibike-tripdata.csv.zip"
@@ -16,14 +17,16 @@ def download_zip_file():
     return(zipc)
 
 def from_csv_to_json(file_name):
-    with open(f"data/raw/{file_name}","r") as file:
-        csv_reader = csv.reader(file)
+    jsonArray = []
 
-        with open("data/raw/citibike_data.json","w") as new_file:
-            csv_writer = csv.writer(new_file)
+    with open(f"data/raw/{file_name}",encoding="utf-8") as file:
+        csv_reader = csv.DictReader(file)
+        for row in csv_reader:
+            jsonArray.append(row)
 
-            for line in csv_reader:
-                csv_writer.writerow(line)
+        with open("data/raw/citibike_data.json","w",encoding="utf-8") as new_file:
+            jsonString = json.dumps(jsonArray, indent = 4)
+            new_file.write(jsonString)
 
 file_name = download_zip_file()
 
