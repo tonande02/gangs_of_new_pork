@@ -49,6 +49,15 @@ def get_data_from_all(list_of_stations, start_t, end_t):
             json.dump(data, open_file, indent=2)
 
 
+# writes data to one json file per station
+def get_data_into_separate_files(station, start_t, end_t, counter):
+    with open(f'data/raw/observations{counter}.json', "a") as open_file:
+        url = get_base_url(station, start_t, end_t)
+        data = get_data_from_one_station(url)
+        
+        json.dump(data, open_file, indent=2)
+
+
 
 
 ## Edit below with correct paths
@@ -58,11 +67,14 @@ LIST_FILE = "data/raw/get_list_weather_stations.json"
 
 if __name__ == "__main__":
     stations = get_station_ids_from_file(LIST_FILE)
-    get_data_from_all(stations, "2021-08-08", "2021-08-15")
+    ## run this to get all data into one dataset (NB! exceeds allowed calls)
+    # get_data_from_all(stations, "2021-08-08", "2021-08-15")
 
-    ## just for testing
-    # station = stations[510]
-    # endpoint = get_base_url(station, "2021-08-08", "2021-08-10")
-    # print(endpoint)
-    # print(station)
+    
+    ## run this to get 1 dataset per station
+    station_nr = 0
+    for i in range(len(stations)):
+        get_data_into_separate_files(stations[station_nr], "2021-08-08", "2021-08-16", station_nr)
+        station_nr += 1
+
     
