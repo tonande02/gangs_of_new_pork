@@ -1,8 +1,7 @@
 from io import BytesIO
 from urllib.request import urlopen
+import urllib.parse
 from zipfile import ZipFile
-import requests
-import json
 import csv
 
 def download_zip_file():
@@ -10,11 +9,14 @@ def download_zip_file():
     with urlopen(zipurl) as zipresp:
         with ZipFile(BytesIO(zipresp.read())) as zfile:
             zfile.extractall('data/raw')
+    
+    zipc = urllib.parse.urlsplit(zipurl)
+    zipc= zipc.path.split("/")[-1]
+    zipc=(zipc[:-4])
+    return(zipc)
 
-
-
-def from_csv_to_json():
-    with open("data/raw/citibike_data.csv","r") as file:
+def from_csv_to_json(file_name):
+    with open(f"data/raw/{file_name}","r") as file:
         csv_reader = csv.reader(file)
 
         with open("data/raw/citibike_data.json","w") as new_file:
@@ -23,6 +25,6 @@ def from_csv_to_json():
             for line in csv_reader:
                 csv_writer.writerow(line)
 
-download_zip_file()
+file_name = download_zip_file()
 
-from_csv_to_json()
+from_csv_to_json(file_name)
