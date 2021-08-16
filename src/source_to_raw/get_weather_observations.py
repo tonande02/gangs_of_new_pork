@@ -23,4 +23,4 @@ LIST_OF_ENDPOINTS = get_endpoints(LIST_FILE)
 
 if __name__ == "__main__":
     stations = get_endpoints(LIST_FILE)
-    
+    #here
