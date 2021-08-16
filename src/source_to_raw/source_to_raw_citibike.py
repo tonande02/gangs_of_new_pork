@@ -24,7 +24,7 @@ def from_csv_to_json(file_name):
         for row in csv_reader:
             jsonArray.append(row)
 
-        with open("data/raw/citibike_data.json","w",encoding="utf-8") as new_file:
+        with open("data/raw/citibike_data_full.json","w",encoding="utf-8") as new_file:
             jsonString = json.dumps(jsonArray, indent = 4)
             new_file.write(jsonString)
 
