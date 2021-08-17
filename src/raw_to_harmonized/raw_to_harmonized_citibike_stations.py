@@ -26,7 +26,7 @@ def get_sorted_keys_end(dictionary):
     sorted_list_of_keys_end = (sorted_list_of_keys[0],sorted_list_of_keys[1],sorted_list_of_keys[2],sorted_list_of_keys[3])
     return sorted_list_of_keys_end
 
-def get_list_of_rows_from_dict(dictionary, sorted_list_of_keys_start):
+def get_list_of_rows_from_dict(dictionary, sorted_list_of_keys_start, sorted_list_of_keys_end):
     list_of_rows = []
     values = []
     for i in dictionary:
@@ -34,6 +34,10 @@ def get_list_of_rows_from_dict(dictionary, sorted_list_of_keys_start):
         for key in sorted_list_of_keys_start:
             values.append(i[key])
         
+        # for value in values:
+        #     if sorted_list_of_keys_end[2] not in value:
+        #         values.append()
+
         count = 0 
         for k in values[:2]:
             new = k[:7]
@@ -53,7 +57,7 @@ def write_to_file(data, filepath):
 dicto = read_json()
 list_of_keys_start = get_sorted_keys_start(dicto)
 list_of_keys_end = get_sorted_keys_end(dicto)
-list_of_row = get_list_of_rows_from_dict(dicto,list_of_keys_start)
+list_of_row = get_list_of_rows_from_dict(dicto,list_of_keys_start, list_of_keys_end)
 
 #write_to_file(list_of_keys,"data/raw_to_harmonized/columns.json")
 #write_to_file(list_of_row,"data/raw_to_harmonized/list_of_tuples.json")
