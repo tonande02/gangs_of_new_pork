@@ -1,4 +1,5 @@
 import json
+import time
 
 def read_json():
     with open("data/raw/citibike_data_full.json","r") as jsonfile:
@@ -52,18 +53,21 @@ def adding_missing_stations(dictionary,list_of_rows,list_of_keys_end):
         values = []
         for key in list_of_keys_end:
             values.append(i[key])
-        
-        count = 0 
-        for k in values[:2]:
-            new = k[:7]
-            values[count] = new
-            count = count + 1
-        
-        for i in list_of_rows:
-            if values not in list_of_rows:
-                list_of_rows.append(values)
-            else:
-                pass
+    
+        if len(values) != 4:
+            pass
+        else:
+            count = 0 
+            for k in values[:2]:
+                new = k[:7]
+                values[count] = new
+                count = count + 1
+            
+            for i in list_of_rows:
+                if values not in list_of_rows:
+                    list_of_rows.append(values)
+                else:
+                    pass
 
     return list_of_rows
 
