@@ -2,48 +2,59 @@ from pathlib import Path
 import requests
 import json
 import csv
-import io
 
-STATION_IDS = ["USC00284339",
-"USC00287545",
-"US1NJBG0018",
-"USC00305816",
-"US1NYNY0078",
-"USW00094728",
-"US1NYNY0074",
-"USC00305806",
-"USC00305799",
-"US1NYBX0025",
-"USC00300961",
-"USW00014732",
-"USC00302868",
-"US1NYQN0026",
-"USC00305804",
-"US1NYQN0002",
-"USC00300958",
-"US1NYKN0025"]
+# downloads and combines datasets from each station into one csv-file
+def download_csvs_from_endpoint(base_endpoint, list_of_station_ids):
+    new_file = "data/raw/weather_data_for_conversion.csv"
 
-ENDPOINT = "https://www.ncei.noaa.gov/access/past-weather/ID/data.csv"
-
-
-def get_data_from_station_endpoint(endpoint):
-    response = requests.get(endpoint)
-    r = response.text
-
-    reader = csv.DictReader(io.StringIO(r))
-    # print(reader)
-    # print(len(reader))
-
-    # json_data = []
-    # for row in reader:
-    #     json_data.append(row)
-    json_data = json.dumps(list(reader))
-    # print(json_data)
+    for station in list_of_station_ids:
+        endpoint = base_endpoint.replace("ID", station)
+        response = requests.get(endpoint)
+        
+        with open(new_file, "a") as file:
+            writer = csv.writer(file)
+            for line in response.iter_lines():
+                writer.writerow(line.decode('utf-8').split(','))
     
-    with open("data/raw/w_station1.json","w",encoding="utf-8") as new_file:
-            jsonString = json.dumps(json_data, indent=4)
+    return new_file
+
+# converts the csv-file into json
+def from_csv_to_json(file_name):
+    jsonArray = []
+
+    with open(file_name, encoding="utf-8") as file:
+        csv_reader = csv.DictReader(file)
+        for row in csv_reader:
+            jsonArray.append(row)
+
+        with open("data/raw/weather_data_raw.json","w",encoding="utf-8") as new_file:
+            jsonString = json.dumps(jsonArray, indent = 4)
             new_file.write(jsonString)
 
 
 if __name__ == "__main__":
-    get_data_from_station_endpoint("https://www.ncei.noaa.gov/access/past-weather/USC00284339/data.csv")
+    STATION_IDS = [
+        "USC00284339",
+        "USC00287545",
+        "US1NJBG0018",
+        "USC00305816",
+        "US1NYNY0078",
+        "USW00094728",
+        "US1NYNY0074",
+        "USC00305806",
+        "USC00305799",
+        "US1NYBX0025",
+        "USC00300961",
+        "USW00014732",
+        "USC00302868",
+        "US1NYQN0026",
+        "USC00305804",
+        "US1NYQN0002",
+        "USC00300958",
+        "US1NYKN0025"]
+
+    BASE_ENDPOINT = "https://www.ncei.noaa.gov/access/past-weather/ID/data.csv"
+    
+    # these two run the program and download the files
+    file = download_csvs_from_endpoint(BASE_ENDPOINT, STATION_IDS)
+    from_csv_to_json(file)
