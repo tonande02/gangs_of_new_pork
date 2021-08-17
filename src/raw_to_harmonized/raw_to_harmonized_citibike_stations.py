@@ -17,12 +17,17 @@ def get_sorted_keys(dictionary):
     return sorted_list_of_keys
 
 def get_list_of_rows_from_dict(dictionary, sorted_list_of_keys):
+
     list_of_rows = []
     values = []
     for i in dictionary:
+        values = []
         for key in sorted_list_of_keys:
             values.append(i[key])
-        list_of_rows.append(values)
+        if values in list_of_rows:
+            pass
+        else:
+            list_of_rows.append(values)
     return list_of_rows
 
 def write_to_file(data, filepath):
