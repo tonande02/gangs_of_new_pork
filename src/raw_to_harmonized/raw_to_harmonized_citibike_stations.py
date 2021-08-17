@@ -1,10 +1,10 @@
 import json
 
 def read_json():
-    with open("data/source_to_raw/citibike_data_full.json","r") as jsonfile:
+    with open("data/raw/citibike_data_full.json","r") as jsonfile:
         line = jsonfile.read()
         dictionary = json.loads(line)
-        return dictionary
+        return (dictionary)
 
 def get_sorted_keys(dictionary):
     list_of_keys=[]
