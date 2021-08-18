@@ -12,7 +12,7 @@ DESTINATION_DB_NAME = "NYCbike"
 ############################################
 
 DESTINATION_SCHEMA_NAME  = "staged"
-
+table_names = ["weather_data", "weather_station", "bike_data", "bike_stations"]
 
 
 def read_json_files(fpath):
@@ -103,19 +103,15 @@ if __name__ == "__main__":
    ) as connection_destination_db:
 
         with connection_destination_db.cursor() as cursor:
-            jsonf = read_json_files("data/raw_to_harmonized/columns.json")
-            fp =creating_query_table("BIKER","BIKER",jsonf)
-            cursor.execute(fp)
+            for table in table_names:
+                filpath = f"data/harmonized/{table}_columns.json"
+                jsonf = read_json_files(filpath)
+                fp =creating_query_table(DESTINATION_SCHEMA_NAME,table,jsonf)
+                cursor.execute(fp)
 
         connection_destination_db.commit()
 
-    #jsonf = read_json_files("data/raw_to_harmonized/columns.json")
-
-
-    table_names = ["weather_data", "weather_station", "bike_data", "bike_station"]
-
-    #fp =creating_query_table(DESTINATION_SCHEMA_NAME,"BIKER",jsonf)
-    #fp = f"data/raw_to_harmonized/{​table_names[0]}​_columns.json"
+    
 
 
 
