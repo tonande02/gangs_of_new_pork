@@ -18,7 +18,7 @@ if __name__ == "__main__":
     file_path = "data/raw/weather_coordinates.json"
     station_data = open_weather_stations(file_path)
 
-    file_path = "data/harmonized/weather_coordinates_rows.json"
+    file_path = "data/harmonized/weather_station_rows.json"
     write_stations_rows(station_data, file_path)
 
     columns_list = ["stations_id", "location", "latitude", "longitude"]
