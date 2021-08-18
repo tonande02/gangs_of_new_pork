@@ -9,51 +9,56 @@ def get_json_raw(filepath):
     
     return data
 
-def parse_file(file_dict):
-    our_list = []
 
-    for line in file_dict:
+def create_rows_for_harmonized(raw_weather_file):
+    row_list = []
+
+    for line in raw_weather_file:
         if len(line) == 2:
-            our_key = line[1]
-            our_key = our_key.partition('(')[2]
-            our_key = our_key.partition(')')[0]
+            station_data = line[1]
+            station_data = station_data.partition('(')[2]
+            station_data = station_data.partition(')')[0]
         elif line[0] == 'Date':
             pass
         else:
-            our_list2 = line
-            our_list2.insert(0, our_key)
-            our_list.append(our_list2)
+            row_data = line
+            row_data.insert(0, station_data)
+            row_list.append(row_data)
 
-    return our_list
+    return row_list
 
-def get_our_columns(file_dict):
-    our_list = file_dict[1]
-    columns = []
-    for element in our_list:
+
+def create_columns_for_harmonized(raw_weather_file):
+    column_data = raw_weather_file[1]
+    columns_list = []
+    for element in column_data:
         column = element[:4]
-        columns.append(column)
+        columns_list.append(column)
 
-    columns.insert(0, 'station_id')
-    return columns
+    columns_list.insert(0, 'station_id')
+    return columns_list
 
-def write_columns_to_file(columns_list):
-    with open('data/harmonized/weather_data_columns.json', "w") as opened_file:
-        json.dump(columns_list, opened_file, indent=2)
 
 def write_rows_to_file(row_list):
     with open('data/harmonized/weather_data_row.json', "w") as opened_file:
         json.dump(row_list, opened_file, indent=2)
 
+
+def write_columns_to_file(columns_list):
+    with open('data/harmonized/weather_data_columns.json', "w") as opened_file:
+        json.dump(columns_list, opened_file, indent=2)
+
 if __name__ == "__main__":
 
     filepath = "data/raw/weather_data_raw.csv"
 
-    file_dict = get_json_raw(filepath)
+    raw_weather_file = get_json_raw(filepath)
 
-    row_list = parse_file(file_dict)
+    row_list = create_rows_for_harmonized(raw_weather_file)
 
-    columns_list = get_our_columns(file_dict)
+    columns_list = create_columns_for_harmonized(raw_weather_file)
+
+    write_rows_to_file(row_list)
 
     write_columns_to_file(columns_list)
 
-    write_rows_to_file(row_list)
