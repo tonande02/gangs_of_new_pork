@@ -23,5 +23,5 @@ if __name__ == "__main__":
 
     columns_list = ["stations_id", "location", "latitude", "longitude"]
 
-    file_path = "data/harmonized/weather_station.json"
+    file_path = "data/harmonized/weather_station_columns.json"
     write_stations_columns(columns_list, file_path)
