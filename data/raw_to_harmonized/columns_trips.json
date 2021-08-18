@@ -1,0 +1,7 @@
+[
+  "ride_id",
+  "rideable_type",
+  "started_at",
+  "ended_at",
+  "member_casual"
+]
