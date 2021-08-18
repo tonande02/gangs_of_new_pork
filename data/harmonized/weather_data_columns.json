@@ -1,10 +1,10 @@
 [
   "station_id",
   "Date",
-  "TAVG_Degrees_Fahrenheit",
-  "TMAX_Degrees_Fahrenheit",
-  "TMIN_Degrees_Fahrenheit",
-  "PRCP_Inches",
-  "SNOW_Inches",
-  "SNWD_Inches"
+  "TAVG",
+  "TMAX",
+  "TMIN",
+  "PRCP",
+  "SNOW",
+  "SNWD"
 ]

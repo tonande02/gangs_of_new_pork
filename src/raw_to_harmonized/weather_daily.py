@@ -28,8 +28,13 @@ def parse_file(file_dict):
 
 def get_our_columns(file_dict):
     our_list = file_dict[1]
-    our_list.insert(0, 'station_id')
-    return our_list
+    columns = []
+    for element in our_list:
+        column = element[:4]
+        columns.append(column)
+
+    columns.insert(0, 'station_id')
+    return columns
 
 def write_columns_to_file(columns_list):
     with open('data/harmonized/weather_data_columns.json', "w") as opened_file:
