@@ -1,0 +1,39 @@
+# aws cloudformation deploy --template-file db_setup.yaml --stack-name my-stack-name --parameter-overrides DBName="xxx" DBUser="xxx" DBPassword="xxx"
+# Source: https://github.com/awslabs/aws-cloudformation-templates/blob/master/aws/services/RDS/RDS_with_DBParameterGroup.yaml
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'This AWS CloudFormation code will create an Amazon RDS Relational Database Service database instance.'
+Parameters:
+  DBName:
+    Default: NYCbike
+    Description: The database name
+    Type: String
+    MinLength: '1'
+    MaxLength: '64'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+  DBUser:
+    NoEcho: 'true'
+    Description: The database admin account username
+    Type: String
+    MinLength: '1'
+    MaxLength: '16'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+  DBPassword:
+    NoEcho: 'true'
+    Description: The database admin account password
+    Type: String
+    MinLength: '8'
+    MaxLength: '41'
+    AllowedPattern: '[a-zA-Z0-9]*'
+    ConstraintDescription: must contain only alphanumeric characters.
+Resources:
+  MyDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBName: !Ref 'DBName'
+      AllocatedStorage: '5'
+      DBInstanceClass: db.t3.micro # this is the smallest and cheapest DB
+      Engine: postgres # DB type
+      MasterUsername: !Ref 'DBUser'
+      MasterUserPassword: !Ref 'DBPassword'
