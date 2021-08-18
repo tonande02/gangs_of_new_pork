@@ -5,7 +5,7 @@ import csv
 
 # downloads and combines datasets from each station into one csv-file
 def download_csvs_from_endpoint(base_endpoint, list_of_station_ids):
-    new_file = "data/raw/weather_data_for_conversion.csv"
+    new_file = "data/raw/weather_data_raw.csv"
 
     for station in list_of_station_ids:
         endpoint = base_endpoint.replace("ID", station)
@@ -17,20 +17,6 @@ def download_csvs_from_endpoint(base_endpoint, list_of_station_ids):
                 writer.writerow(line.decode('utf-8').split(','))
     
     return new_file
-
-# converts the csv-file into json
-def from_csv_to_json(file_name):
-    jsonArray = []
-
-    with open(file_name, encoding="utf-8") as file:
-        csv_reader = csv.DictReader(file)
-        for row in csv_reader:
-            jsonArray.append(row)
-
-        with open("data/raw/weather_data_raw.json","w",encoding="utf-8") as new_file:
-            jsonString = json.dumps(jsonArray, indent = 4)
-            new_file.write(jsonString)
-
 
 if __name__ == "__main__":
     STATION_IDS = [
@@ -57,4 +43,3 @@ if __name__ == "__main__":
     
     # these two run the program and download the files
     file = download_csvs_from_endpoint(BASE_ENDPOINT, STATION_IDS)
-    from_csv_to_json(file)

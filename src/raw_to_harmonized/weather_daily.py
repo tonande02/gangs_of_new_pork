@@ -32,16 +32,16 @@ def get_our_columns(file_dict):
     return our_list
 
 def write_columns_to_file(columns_list):
-    with open('data/harmonized/weather_columns.json', "w") as opened_file:
+    with open('data/harmonized/weather_data_columns.json', "w") as opened_file:
         json.dump(columns_list, opened_file, indent=2)
 
 def write_rows_to_file(row_list):
-    with open('data/harmonized/weather_row.json', "w") as opened_file:
+    with open('data/harmonized/weather_data_row.json', "w") as opened_file:
         json.dump(row_list, opened_file, indent=2)
 
 if __name__ == "__main__":
 
-    filepath = "data/raw/weather_data_for_conversion.csv"
+    filepath = "data/raw/weather_data_raw.csv"
 
     file_dict = get_json_raw(filepath)
 
