@@ -12,7 +12,7 @@ DESTINATION_DB_NAME = "NYCbike"
 ############################################
 
 DESTINATION_SCHEMA_NAME  = "staged"
-table_names = ["weather_data", "weather_station", "bike_data", "bike_stations"]
+TABLE_NAMES = ["weather_data", "weather_station", "bike_data", "bike_stations"]
 
 
 def read_json_files(fpath):
@@ -21,6 +21,10 @@ def read_json_files(fpath):
         jsonf = json.loads(lines)
 
     return jsonf
+
+def creating_schema(schema_name):
+    query = f'CREATE SCHEMA IF NOT EXISTS {schema_name};'
+    return query
 
 def creating_query_table(schema_name, table_name, fp):
     columns_datatype = []
@@ -103,7 +107,9 @@ if __name__ == "__main__":
    ) as connection_destination_db:
 
         with connection_destination_db.cursor() as cursor:
-            for table in table_names:
+            schema_query = creating_schema(DESTINATION_SCHEMA_NAME)
+            cursor.execute(schema_query)
+            for table in TABLE_NAMES:
                 filpath = f"data/harmonized/{table}_columns.json"
                 jsonf = read_json_files(filpath)
                 fp =creating_query_table(DESTINATION_SCHEMA_NAME,table,jsonf)
