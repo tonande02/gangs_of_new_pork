@@ -38,6 +38,6 @@ dicto = read_json()
 list_of_keys = get_sorted_keys(dicto)
 list_of_row = get_list_of_rows_from_dict(dicto,list_of_keys)
 
-write_to_file(list_of_keys,"data/raw_to_harmonized/columns_trips.json")
-write_to_file(list_of_row,"data/raw_to_harmonized/list_of_tuples_trips.json")
+write_to_file(list_of_keys,"data/harmonized/bike_data_columns.json")
+write_to_file(list_of_row,"data/harmonized/bike_data_rows.json")
 

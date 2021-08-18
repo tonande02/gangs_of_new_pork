@@ -94,6 +94,6 @@ new_list_of_rows = adding_missing_stations(dicto,list_of_row,list_of_keys_end)
 lastone = removing_missing_values(new_list_of_rows)
 last2=removing_duplicates(lastone)
 
-write_to_file(list_of_keys_start,"data/raw_to_harmonized/columns.json")
-write_to_file(last2,"data/raw_to_harmonized/list_of_tuples.json")
+write_to_file(list_of_keys_start,"data/harmonized/bike_stations_columns.json")
+write_to_file(last2,"data/harmonized/bike_stations_rows.json")
 
