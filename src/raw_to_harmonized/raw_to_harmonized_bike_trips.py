@@ -32,6 +32,19 @@ def get_list_of_rows_from_dict(dictionary, sorted_list_of_keys):
             list_of_rows.append(values)
     return list_of_rows
 
+def removing_missing_values(new_list_of_rows):
+    lista = []
+    for list in new_list_of_rows:
+        new_list = []
+        for values in list:
+            if values == "":
+                values = None
+            else:
+                pass
+            new_list.append(values)
+        lista.append(new_list)
+    return lista
+
 def write_to_file(data, filepath):
     with open(filepath, "w") as open_file:
         json.dump(data, open_file, indent= 2)
@@ -39,7 +52,8 @@ def write_to_file(data, filepath):
 dicto = read_json()
 list_of_keys = get_sorted_keys(dicto)
 list_of_row = get_list_of_rows_from_dict(dicto,list_of_keys)
+list_of_rows= removing_missing_values(list_of_row)
 
 write_to_file(list_of_keys,"data/harmonized/bike_data_columns.json")
-write_to_file(list_of_row,"data/harmonized/bike_data_rows.json")
+write_to_file(list_of_rows,"data/harmonized/bike_data_rows.json")
 
