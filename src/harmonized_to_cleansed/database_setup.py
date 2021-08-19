@@ -42,23 +42,22 @@ def creating_query_table(schema_name, table_name, fp):
     return query
 
 
-def populating_table_query(schema_name, table_name, column_names, data):
-    pass
+def populating_table_query(schema_name, table_name, columns, rows):
+    columns_str = ", ".join(columns)
+    
+    placeholder_list = ["%s"] * len(rows)
+    placeholder_string = ", ".join(placeholder_list)
+    entries = []
+    count = 0
+    for row in rows:
+        row = str(row)
+        entry = f"({row})"
+        entries.append(entry)
 
 
+    insert_query = f"INSERT INTO {schema_name}.{table_name} ({columns_str}) VALUES {entries};"
 
-
-
-
-
-
-
-
-
-
-
-
-
+    print(insert_query)
 
 
 
@@ -89,8 +88,17 @@ if __name__ == "__main__":
             for table in TABLE_NAMES:
                 filepath_columns = f"data/harmonized/{table}_columns.json"
                 jsonf = read_json_files(filepath_columns)
-                fp =creating_query_table(DESTINATION_SCHEMA_NAME,table,jsonf)
-                cursor.execute(fp)
+                fp_columns =creating_query_table(DESTINATION_SCHEMA_NAME,table,jsonf)
+                cursor.execute(fp_columns)
+            
+            # populating tables
+            for table in TABLE_NAMES:
+                filepath_columns = f"data/harmonized/{table}_columns.json"
+                jsonf_columns = read_json_files(filepath_columns)
+                filepath_rows = f"data/harmonized/{table}_rows.json"
+                jsonf_rows = read_json_files(filepath_rows)
+                fp_rows =populating_table_query(DESTINATION_SCHEMA_NAME,table,jsonf_columns,jsonf_rows)
+                # cursor.execute(fp_rows)
 
         connection_destination_db.commit()
 
