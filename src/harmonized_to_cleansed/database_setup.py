@@ -42,7 +42,8 @@ def creating_query_table(schema_name, table_name, fp):
     return query
 
 
-
+def populating_table_query(schema_name, table_name, column_names, data):
+    # here
 
 
 
@@ -107,11 +108,14 @@ if __name__ == "__main__":
    ) as connection_destination_db:
 
         with connection_destination_db.cursor() as cursor:
+            # creating schema
             schema_query = creating_schema(DESTINATION_SCHEMA_NAME)
             cursor.execute(schema_query)
+
+            # creating tables
             for table in TABLE_NAMES:
-                filpath = f"data/harmonized/{table}_columns.json"
-                jsonf = read_json_files(filpath)
+                filepath_columns = f"data/harmonized/{table}_columns.json"
+                jsonf = read_json_files(filepath_columns)
                 fp =creating_query_table(DESTINATION_SCHEMA_NAME,table,jsonf)
                 cursor.execute(fp)
 
