@@ -23,8 +23,15 @@ def create_rows_for_harmonized(raw_weather_file):
         else:
             row_data = line
             row_data.insert(0, station_data)
-            row_list.append(row_data)
 
+            row_data_filled = []
+            for value in row_data:
+                if value == "":
+                    value = "NULL"
+                row_data_filled.append(value)
+
+            row_list.append(row_data_filled)
+        
     return row_list
 
 
@@ -40,7 +47,7 @@ def create_columns_for_harmonized(raw_weather_file):
 
 
 def write_rows_to_file(row_list):
-    with open('data/harmonized/weather_data_row.json', "w") as opened_file:
+    with open('data/harmonized/weather_data_rows.json', "w") as opened_file:
         json.dump(row_list, opened_file, indent=2)
 
 
