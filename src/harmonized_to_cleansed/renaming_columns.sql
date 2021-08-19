@@ -34,6 +34,9 @@ RENAME COLUMN rideable_type TO bike_type;
 AlTER TABLE cleansed.bike_data
 RENAME COLUMN member_casual TO customer_category;
 
+AlTER TABLE cleansed.weather_station
+RENAME COLUMN stations_id TO station_id;
+
 
 
 
