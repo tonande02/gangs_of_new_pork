@@ -43,34 +43,7 @@ def creating_query_table(schema_name, table_name, fp):
 
 
 def populating_table_query(schema_name, table_name, column_names, data):
-    # here
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    pass
 
 
 
@@ -105,7 +78,7 @@ if __name__ == "__main__":
         user = DB_USER,
         password = PASSWORD,
         port = PORT,
-   ) as connection_destination_db:
+    ) as connection_destination_db:
 
         with connection_destination_db.cursor() as cursor:
             # creating schema
