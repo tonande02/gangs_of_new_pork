@@ -27,7 +27,7 @@ def create_rows_for_harmonized(raw_weather_file):
             row_data_filled = []
             for value in row_data:
                 if value == "":
-                    value = "NULL"
+                    value = None
                 row_data_filled.append(value)
 
             row_list.append(row_data_filled)
