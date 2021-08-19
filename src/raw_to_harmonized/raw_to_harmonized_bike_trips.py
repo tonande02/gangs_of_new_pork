@@ -13,8 +13,10 @@ def get_sorted_keys(dictionary):
                 list_of_keys.append(keys)
     sorted_list_of_keys = sorted(set(list_of_keys))
     
-    sorted_list_of_keys = (sorted_list_of_keys[6], sorted_list_of_keys[7], sorted_list_of_keys[12], sorted_list_of_keys[4], sorted_list_of_keys[5])
+    
+    sorted_list_of_keys = (sorted_list_of_keys[10], sorted_list_of_keys[2], sorted_list_of_keys[6], sorted_list_of_keys[7], sorted_list_of_keys[12], sorted_list_of_keys[4], sorted_list_of_keys[5])
     return sorted_list_of_keys   
+    
 
 def get_list_of_rows_from_dict(dictionary, sorted_list_of_keys):
     list_of_rows = []
