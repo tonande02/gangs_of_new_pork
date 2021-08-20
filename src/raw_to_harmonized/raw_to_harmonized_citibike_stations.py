@@ -1,6 +1,7 @@
 import json
 
 def read_json():
+
     with open("data/raw/citibike_data_full.json","r") as jsonfile:
         line = jsonfile.read()
         list_of_dicts = json.loads(line)
@@ -9,10 +10,12 @@ def read_json():
 
 
 def get_sorted_keys_start(list_of_dicts):
+
     list_of_keys_start=[]
+
     for dict in list_of_dicts: #Going through each dict within the list of dicts
         for keys in dict.keys(): 
-                list_of_keys_start.append(keys) #Appending each key that exist in the dicts into a list
+                list_of_keys_start.append(keys) #Appending each key(START STATIONS) that exist in the dicts into a list
     sorted_list_of_keys = sorted(set(list_of_keys_start))
     #Picking out all the unqiue keys(set) and sorting(sorted) them since they allways comes in diffrent orders.
 
@@ -22,10 +25,12 @@ def get_sorted_keys_start(list_of_dicts):
 
 
 def get_sorted_keys_end(list_of_dicts):
+
     list_of_keys_end=[]
+
     for dict in list_of_dicts: #Going through each dict within the list of dicts
         for keys in dict.keys():
-                list_of_keys_end.append(keys) #Appending each key that exist in the dicts into a list
+                list_of_keys_end.append(keys) #Appending each key(END STATIONS) that exist in the dicts into a list
     sorted_list_of_keys = sorted(set(list_of_keys_end))
      #Picking out all the unqiue keys(set) and sorting(sorted) them since they allways comes in diffrent orders.
 
@@ -34,53 +39,68 @@ def get_sorted_keys_end(list_of_dicts):
 
 
 
-def get_list_of_rows_from_dict(dictionary, sorted_list_of_keys_start):
-    list_of_rows = []
-    values = []
-    for i in dictionary:
-        values = []
-        for key in sorted_list_of_keys_start:
-            values.append(i[key])
+def get_list_of_values_from_dict(list_of_dicts, sorted_list_of_keys_start):
 
-        if values in list_of_rows:
+    list_of_values = []
+    values = []
+
+    for dicts in list_of_dicts: # Going through each dict within the list of dicts
+        values = []
+        for key in sorted_list_of_keys_start: #Using desired keys to get the right values into a list. 
+            values.append(dicts[key]) 
+
+        if values in list_of_values: #Appending each list of values into a list
             pass
         else:
-            list_of_rows.append(values)
-    return list_of_rows
+            list_of_values.append(values)
+    return list_of_values
 
 
 
-def adding_missing_stations(dictionary,list_of_rows,list_of_keys_end):
+def adding_missing_stations(list_of_dicts,list_of_values,list_of_keys_end):
+
     values = []
-    for i in dictionary:
+
+    # Going through the end station data to see if 
+    # we missed any stations. If so, appending them
+    # into the already created list_of_values.
+
+    for dicts in list_of_dicts: 
         values = []
-        for key in list_of_keys_end:
-            values.append(i[key])
+        for key in list_of_keys_end: 
+            values.append(dicts[key])
             
-        for i in list_of_rows:
-            if values not in list_of_rows:
-                list_of_rows.append(values)
+        for i in list_of_values:
+            if values not in list_of_values:
+                list_of_values.append(values)
             else:
                 pass
 
-    return list_of_rows
+    return list_of_values
 
 
 
-def removing_missing_values(new_list_of_rows):
-    lista = []
-    for i in new_list_of_rows:
+def removing_missing_values(list_of_values_start_and_end):
+
+    removed_values_list = []
+
+    for i in list_of_values_start_and_end:
         if "" in i:
             pass
         else:
-            lista.append(i)
-    return lista
+            removed_values_list.append(i)
+
+    return removed_values_list
 
 
-def removing_duplicates(list_of_rows):
+def removing_duplicates(list_of_values_start_and_end):
+
+    #Removing dublicates of stations
+
     lists_of_ids = []
-    new_list_of_rows = []
-    for lists in list_of_rows:
+    final_list_of_values = []
+
+    for lists in list_of_values_start_and_end:
         if lists[2] not in lists_of_ids:
             lists_of_ids.append(lists[2])
         else:
@@ -88,25 +108,36 @@ def removing_duplicates(list_of_rows):
     
     lists_of_ids=set(lists_of_ids)
 
-    for i in list_of_rows:
+    for i in list_of_values_start_and_end:
         if i[2] in lists_of_ids:
-            new_list_of_rows.append(i)
+            final_list_of_values.append(i)
             lists_of_ids.remove(i[2])
     
-    return new_list_of_rows                      
+    return final_list_of_values                      
+
+
 
 def write_to_file(data, filepath):
+
     with open(filepath, "w") as open_file:
         json.dump(data, open_file, indent= 2)
 
-dicto = read_json() #reading json_file
-list_of_keys_start = get_sorted_keys_start(dicto)
-list_of_keys_end = get_sorted_keys_end(dicto)
-list_of_row = get_list_of_rows_from_dict(dicto,list_of_keys_start)
-new_list_of_rows = adding_missing_stations(dicto,list_of_row,list_of_keys_end)
-lastone = removing_missing_values(new_list_of_rows)
-last2=removing_duplicates(lastone)
 
-write_to_file(list_of_keys_start,"data/harmonized/bike_stations_columns.json")
-write_to_file(last2,"data/harmonized/bike_stations_rows.json")
+if __name__ == "__main__":
+    dicto = read_json() #reading json_file
+
+    list_of_keys_start = get_sorted_keys_start(dicto) #Getting start station keys
+
+    list_of_keys_end = get_sorted_keys_end(dicto) #Getting end station keys
+
+    list_of_values = get_list_of_values_from_dict(dicto,list_of_keys_start) #Adding values for desired keys
+
+    list_of_values_start_and_end = adding_missing_stations(dicto,list_of_values,list_of_keys_end) #Adding missing stations
+
+    list_of_values_start_and_end = removing_missing_values(list_of_values_start_and_end) #Removing missing values (" ")
+
+    final_list_of_vlues=removing_duplicates(list_of_values_start_and_end) #Remvoing dublicates of stations
+
+    write_to_file(list_of_keys_start,"data/harmonized/bike_stations_columns.json")
+    write_to_file(final_list_of_vlues,"data/harmonized/bike_stations_rows.json")
 
