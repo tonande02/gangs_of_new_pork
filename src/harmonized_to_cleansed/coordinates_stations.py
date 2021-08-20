@@ -67,6 +67,14 @@ def populate_column_query(schema_name, table_name, stations_list):
     UPDATE {schema_name}.{table_name} SET nearest_weather_station = '{stations_list[1]}' WHERE station_id = '{stations_list[0]}';"""
     return query
 
+def foreign_key_set_up(schema_name, table_name_bike, table_name_weather, column_name_1, column_name_2):
+    query = f"""
+    ALTER TABLE {schema_name}.{table_name_bike} 
+    ADD CONSTRAINT constraint_fk_station
+    FOREIGN KEY({column_name_1})
+    REFERENCES {schema_name}.{table_name_weather} ({column_name_2});"""
+    return query
+
 
 if __name__ == "__main__":
     with psycopg2.connect(
@@ -87,11 +95,11 @@ if __name__ == "__main__":
             b_result = cursor.fetchall()
 
             closest_stations = get_station_proximity(b_result, w_result)
-            print(closest_stations)
             query = add_column_query(DESTINATION_SCHEMA_NAME, "bike_stations", "nearest_weather_station")
             cursor.execute(query)
             for station in closest_stations:
                 query = populate_column_query(DESTINATION_SCHEMA_NAME, "bike_stations", station)
                 cursor.execute(query)
+            foreign_key_set_up(DESTINATION_SCHEMA_NAME, 'bike_stations','weather_station', 'nearest_weather_station', 'station_id')
 
         connection_destination_db.commit()
