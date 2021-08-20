@@ -62,11 +62,10 @@ def add_column_query(schema_name, table_name, column_name):
 
     return query
 
-def populate_column_query(schema_name, table_name, column_name, stations_list):
+def populate_column_query(schema_name, table_name, stations_list):
     query = f"""
-    UPDATE {schema_name}.{table_name} ({column_name}) VALUES"""
-
-
+    UPDATE {schema_name}.{table_name} SET nearest_weather_station = '{stations_list[1]}' WHERE station_id = '{stations_list[0]}';"""
+    return query
 
 
 if __name__ == "__main__":
@@ -88,9 +87,11 @@ if __name__ == "__main__":
             b_result = cursor.fetchall()
 
             closest_stations = get_station_proximity(b_result, w_result)
-            # print(closest_stations)
+            print(closest_stations)
             query = add_column_query(DESTINATION_SCHEMA_NAME, "bike_stations", "nearest_weather_station")
             cursor.execute(query)
-            
+            for station in closest_stations:
+                query = populate_column_query(DESTINATION_SCHEMA_NAME, "bike_stations", station)
+                cursor.execute(query)
 
         connection_destination_db.commit()
