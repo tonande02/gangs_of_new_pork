@@ -21,7 +21,7 @@ TABLE_NAMES = ["weather_data", "weather_station", "bike_data", "bike_stations"]
 
 def get_weather_stations(schema_name, table_station, table_data):
     query = f"""
-    SELECT station_id, latitude, longitude FROM {schema_name}.{table_station}
+    SELECT station_id, latitude::float, longitude::float FROM {schema_name}.{table_station}
     WHERE station_id IN
     (SELECT station_id FROM {schema_name}.{table_data}
     WHERE date >= '01-01-2021');"""
@@ -30,12 +30,41 @@ def get_weather_stations(schema_name, table_station, table_data):
 
 def get_bike_stations(schema_name, table_station):
     query = f"""
-    SELECT station_id, latitude, longitude FROM {schema_name}.{table_station};"""
+    SELECT station_id, latitude::float, longitude::float FROM {schema_name}.{table_station};"""
 
     return query
 
+def get_station_proximity(list_bike_stations, list_weather_stations):
+    closest_stations = []
 
+    for station in list_bike_stations:
+        b_coords = (station[1], station[2])
 
+        closest_distance = 500000
+        closest_station = ""
+
+        for w_station in list_weather_stations:
+            w_coords = (w_station[1], w_station[2])
+            distance = geopy.distance.distance(b_coords, w_coords).km
+            if distance < closest_distance:
+                closest_distance = distance
+                closest_station = w_station[0]
+
+        stations_list = [station[0], closest_station]
+        stations_tuple = tuple(stations_list)
+        closest_stations.append(stations_tuple)
+    
+    return closest_stations
+
+def add_column_query(schema_name, table_name, column_name):
+    query = f"""ALTER TABLE {schema_name}.{table_name}
+    ADD {column_name} TEXT;"""
+
+    return query
+
+def populate_column_query(schema_name, table_name, column_name, stations_list):
+    query = f"""
+    UPDATE {schema_name}.{table_name} ({column_name}) VALUES"""
 
 
 
@@ -50,22 +79,18 @@ if __name__ == "__main__":
     ) as connection_destination_db:
 
         with connection_destination_db.cursor() as cursor:
-            # query = get_weather_stations(DESTINATION_SCHEMA_NAME, "weather_station", "weather_data")
-            # cursor.execute(query)
-            # result = cursor.fetchall()
-            # for line in result:
-            #     print(line)
-            # print(type(result[0]))
-            # print(len(result))
-
+            query = get_weather_stations(DESTINATION_SCHEMA_NAME, "weather_station", "weather_data")
+            cursor.execute(query)
+            w_result = cursor.fetchall()
+            
             query = get_bike_stations(DESTINATION_SCHEMA_NAME, "bike_stations")
             cursor.execute(query)
-            result = cursor.fetchall()
-            print(result[0])
-            print(type(result[0]))
-            print(len(result))
+            b_result = cursor.fetchall()
 
-
-        
+            closest_stations = get_station_proximity(b_result, w_result)
+            # print(closest_stations)
+            query = add_column_query(DESTINATION_SCHEMA_NAME, "bike_stations", "nearest_weather_station")
+            cursor.execute(query)
+            
 
         connection_destination_db.commit()
