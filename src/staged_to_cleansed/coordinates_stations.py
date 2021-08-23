@@ -100,6 +100,8 @@ if __name__ == "__main__":
             for station in closest_stations:
                 query = populate_column_query(DESTINATION_SCHEMA_NAME, "bike_stations", station)
                 cursor.execute(query)
-            foreign_key_set_up(DESTINATION_SCHEMA_NAME, 'bike_stations','weather_station', 'nearest_weather_station', 'station_id')
+                
+            query = foreign_key_set_up(DESTINATION_SCHEMA_NAME, 'bike_stations','weather_station', 'nearest_weather_station', 'station_id')
+            cursor.execute(query)
 
         connection_destination_db.commit()
