@@ -14,9 +14,9 @@ DESTINATION_DB_NAME = "NYCbike"
 ############################################
 
 DESTINATION_SCHEMA_NAME  = "staged"
-TABLE_NAMES = ["weather_data", "weather_station", "bike_data", "bike_stations"]
+TABLE_NAMES = ["weather_data", "weather_station", "bike_data", "bike_station"]
 
-
+# reads our json files into python list
 def read_json_files(fpath):
     with open(fpath,"r") as file_json:
         lines = file_json.read()
@@ -24,10 +24,12 @@ def read_json_files(fpath):
 
     return jsonf
 
+# creates staged schema in our database
 def creating_schema(schema_name):
     query = f'CREATE SCHEMA IF NOT EXISTS {schema_name};'
     return query
 
+# creates tables and column names, with datatype TEXT
 def creating_query_table(schema_name, table_name, fp):
     columns_datatype = []
     for columns in fp:
@@ -43,7 +45,7 @@ def creating_query_table(schema_name, table_name, fp):
     query += ", audit_inserted_to_staged_at TIMESTAMP DEFAULT NOW() );"
     return query
 
-
+# gets the data from our list, and inserts the values into our tables
 def creating_insert_query(schema_name, table_name, columns, rows):
     columns_str = ", ".join(columns)
     
@@ -58,16 +60,6 @@ def creating_insert_query(schema_name, table_name, columns, rows):
     
     insert_query = f"INSERT INTO {schema_name}.{table_name} ({columns_str}) VALUES {placeholder_string};"
     return (insert_query, entries)
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__ == "__main__":
@@ -98,7 +90,7 @@ if __name__ == "__main__":
                 filepath_rows = f"data/harmonized/{table}_rows.json"
                 jsonf_rows = read_json_files(filepath_rows)
                 fp_rows,list_of_tuples = creating_insert_query(DESTINATION_SCHEMA_NAME,table,jsonf_columns,jsonf_rows)
-               
+                
                 cursor.execute(fp_rows,list_of_tuples)
                 
 

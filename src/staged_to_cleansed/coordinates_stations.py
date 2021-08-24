@@ -16,24 +16,26 @@ DESTINATION_DB_NAME = "NYCbike"
 ############################################
 
 DESTINATION_SCHEMA_NAME  = "cleansed"
-TABLE_NAMES = ["weather_data", "weather_station", "bike_data", "bike_stations"]
+TABLE_NAMES = ["weather_data", "weather_station", "bike_data", "bike_station"]
 
-
+# gather the weather station id and coordinates from our tables
 def get_weather_stations(schema_name, table_station, table_data):
     query = f"""
     SELECT station_id, latitude::float, longitude::float FROM {schema_name}.{table_station}
     WHERE station_id IN
     (SELECT station_id FROM {schema_name}.{table_data}
-    WHERE date >= '01-01-2021');"""
+    WHERE date >= '01-06-2021');"""
 
     return query
 
+# gather the bike station id and coordinates from our tables
 def get_bike_stations(schema_name, table_station):
     query = f"""
     SELECT station_id, latitude::float, longitude::float FROM {schema_name}.{table_station};"""
 
     return query
 
+# goes through the different bike stations, and finds the nearest weather station
 def get_station_proximity(list_bike_stations, list_weather_stations):
     closest_stations = []
 
@@ -56,17 +58,20 @@ def get_station_proximity(list_bike_stations, list_weather_stations):
     
     return closest_stations
 
+# adds a query for creating a new columns with the nearest weather station
 def add_column_query(schema_name, table_name, column_name):
     query = f"""ALTER TABLE {schema_name}.{table_name}
     ADD {column_name} TEXT;"""
 
     return query
 
+# adds the nearest weather station to the new column in bike station
 def populate_column_query(schema_name, table_name, stations_list):
     query = f"""
     UPDATE {schema_name}.{table_name} SET nearest_weather_station = '{stations_list[1]}' WHERE station_id = '{stations_list[0]}';"""
     return query
 
+# adds a foreign key to the nearest weather station in bike station 
 def foreign_key_set_up(schema_name, table_name_bike, table_name_weather, column_name_1, column_name_2):
     query = f"""
     ALTER TABLE {schema_name}.{table_name_bike} 
@@ -86,22 +91,23 @@ if __name__ == "__main__":
     ) as connection_destination_db:
 
         with connection_destination_db.cursor() as cursor:
-            query = get_weather_stations(DESTINATION_SCHEMA_NAME, "weather_station", "weather_data")
+            query = get_weather_stations(DESTINATION_SCHEMA_NAME, TABLE_NAMES[1], TABLE_NAMES[0])
             cursor.execute(query)
             w_result = cursor.fetchall()
             
-            query = get_bike_stations(DESTINATION_SCHEMA_NAME, "bike_stations")
+            query = get_bike_stations(DESTINATION_SCHEMA_NAME, TABLE_NAMES[3])
             cursor.execute(query)
             b_result = cursor.fetchall()
 
             closest_stations = get_station_proximity(b_result, w_result)
-            query = add_column_query(DESTINATION_SCHEMA_NAME, "bike_stations", "nearest_weather_station")
+            new_column = "nearest_weather_station"
+            query = add_column_query(DESTINATION_SCHEMA_NAME, TABLE_NAMES[3], new_column)
             cursor.execute(query)
             for station in closest_stations:
-                query = populate_column_query(DESTINATION_SCHEMA_NAME, "bike_stations", station)
+                query = populate_column_query(DESTINATION_SCHEMA_NAME, TABLE_NAMES[3], station)
                 cursor.execute(query)
                 
-            query = foreign_key_set_up(DESTINATION_SCHEMA_NAME, 'bike_stations','weather_station', 'nearest_weather_station', 'station_id')
+            query = foreign_key_set_up(DESTINATION_SCHEMA_NAME, TABLE_NAMES[3], TABLE_NAMES[1], new_column, 'station_id')
             cursor.execute(query)
 
         connection_destination_db.commit()
