@@ -3,6 +3,7 @@ import json
 def read_json():
 
     with open("data/raw/citibike_data_full.json","r") as jsonfile:
+
         line = jsonfile.read()
         list_of_dicts = json.loads(line)
         return list_of_dicts
@@ -70,7 +71,7 @@ def adding_missing_stations(list_of_dicts,list_of_values,list_of_keys_end):
         for key in list_of_keys_end: 
             values.append(dicts[key])
             
-        for i in list_of_values:
+        for values in list_of_values:
             if values not in list_of_values:
                 list_of_values.append(values)
             else:
