@@ -6,7 +6,7 @@ def open_weather_stations(filepath):
         station_data = json.load(opened_file)
         return station_data
 
-#writes the station data to a json file for later insertion to our table
+#writes a json file with the rows we will use for our database
 def write_stations_rows(stations_dict, filepath):
     with open(filepath, "w") as opened_file:
         json.dump(stations_dict, opened_file, indent=2)

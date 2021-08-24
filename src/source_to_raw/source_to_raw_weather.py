@@ -1,6 +1,5 @@
 from pathlib import Path
 import requests
-import json
 import csv
 
 # downloads and combines datasets from each station into one csv-file
