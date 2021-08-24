@@ -138,6 +138,6 @@ if __name__ == "__main__":
 
     final_list_of_vlues=removing_duplicates(list_of_values_start_and_end) #Remvoing dublicates of stations
 
-    write_to_file(list_of_keys_start,"data/harmonized/bike_stations_columns.json")
-    write_to_file(final_list_of_vlues,"data/harmonized/bike_stations_rows.json")
+    write_to_file(list_of_keys_start,"data/harmonized/bike_station_columns.json")
+    write_to_file(final_list_of_vlues,"data/harmonized/bike_station_rows.json")
 
