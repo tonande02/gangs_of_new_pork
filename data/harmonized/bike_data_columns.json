@@ -1,0 +1,9 @@
+[
+  "start_station_id",
+  "end_station_id",
+  "ride_id",
+  "rideable_type",
+  "started_at",
+  "ended_at",
+  "member_casual"
+]
