@@ -60,7 +60,7 @@ def get_list_of_values_from_dict(list_of_dicts, sorted_list_of_keys_start):
 
 def adding_missing_stations(list_of_dicts,list_of_values,list_of_keys_end):
 
-    values = []
+    
 
     # Going through the end station data to see if 
     # we missed any stations. If so, appending them
@@ -71,7 +71,7 @@ def adding_missing_stations(list_of_dicts,list_of_values,list_of_keys_end):
         for key in list_of_keys_end: 
             values.append(dicts[key])
             
-        for values in list_of_values:
+        for i in list_of_values:
             if values not in list_of_values:
                 list_of_values.append(values)
             else:
@@ -134,11 +134,12 @@ if __name__ == "__main__":
     list_of_values = get_list_of_values_from_dict(dicto,list_of_keys_start) #Adding values for desired keys
 
     list_of_values_start_and_end = adding_missing_stations(dicto,list_of_values,list_of_keys_end) #Adding missing stations
+    print(list_of_values_start_and_end)
 
-    list_of_values_start_and_end = removing_missing_values(list_of_values_start_and_end) #Removing missing values (" ")
+    #list_of_values_start_and_end = removing_missing_values(list_of_values_start_and_end) #Removing missing values (" ")
 
-    final_list_of_vlues=removing_duplicates(list_of_values_start_and_end) #Remvoing dublicates of stations
+    #final_list_of_vlues=removing_duplicates(list_of_values_start_and_end) #Remvoing dublicates of stations
 
-    write_to_file(list_of_keys_start,"data/harmonized/bike_station_columns.json")
-    write_to_file(final_list_of_vlues,"data/harmonized/bike_station_rows.json")
+    #write_to_file(list_of_keys_start,"data/harmonized/bike_station_columns.json")
+    #write_to_file(final_list_of_vlues,"data/harmonized/bike_station_rows.json")
 
