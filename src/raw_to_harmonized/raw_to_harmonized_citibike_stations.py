@@ -67,13 +67,19 @@ def adding_missing_stations(list_of_dicts,list_of_values,list_of_keys_end):
     # into the already created list_of_values.
 
     for dicts in list_of_dicts: 
-        values = []
+        #values = []
         for key in list_of_keys_end: 
             values.append(dicts[key])
             
+<<<<<<< HEAD
         for i in list_of_values:
             if values not in list_of_values:
                 list_of_values.append(values)
+=======
+        for value in values:
+            if value not in list_of_values:
+                list_of_values.append(value)
+>>>>>>> d7a8c9ce045e87c2415b6c32e504b0c2116650a1
             else:
                 pass
 
@@ -140,6 +146,11 @@ if __name__ == "__main__":
 
     #final_list_of_vlues=removing_duplicates(list_of_values_start_and_end) #Remvoing dublicates of stations
 
+<<<<<<< HEAD
     #write_to_file(list_of_keys_start,"data/harmonized/bike_station_columns.json")
     #write_to_file(final_list_of_vlues,"data/harmonized/bike_station_rows.json")
+=======
+    write_to_file(list_of_keys_start,"data/harmonized/test_bike_station_columns.json")
+    write_to_file(final_list_of_vlues,"data/harmonized/test_bike_station_rows.json")
+>>>>>>> d7a8c9ce045e87c2415b6c32e504b0c2116650a1
 
