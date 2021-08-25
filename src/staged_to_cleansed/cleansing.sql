@@ -137,7 +137,7 @@ SET precipitation_centimeters = precipitation_inches * 2.54;
 
 -- adding fk and unique constraints
 
-ALTER TABLE cleansed.bike_stations
+ALTER TABLE cleansed.bike_station
 ADD CONSTRAINT constraint_unique
 UNIQUE (station_id);
 
